@@ -46,3 +46,8 @@ app.*.map.json
 
 # Local test artifacts
 /test_hive/
+
+# Play automation browser profile
+scripts/play-automation/.chrome-profile/
+scripts/play-automation/node_modules/
+.playupload-venv/
