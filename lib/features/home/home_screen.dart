@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:psycolor/models/credit_package.dart';
 import 'package:psycolor/providers/app_providers.dart';
+import 'package:psycolor/providers/mood_providers.dart';
 import 'package:psycolor/theme/app_colors.dart';
 import 'package:psycolor/widgets/credit_badge.dart';
 import 'package:psycolor/widgets/glass_card.dart';
@@ -39,7 +40,9 @@ class HomeScreen extends ConsumerWidget {
                     CreditBadge(balance: balance),
                   ],
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 20),
+                _MoodCard(),
+                const SizedBox(height: 16),
                 _HeroTestCard(
                   onTap: () => context.push('/hue/intro'),
                 )
@@ -276,6 +279,43 @@ class _HeroTestCard extends StatelessWidget {
           ),
           duration: 2.seconds,
         );
+  }
+}
+
+class _MoodCard extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final today = ref.watch(todayMoodProvider);
+
+    return GlassCard(
+      onTap: () =>
+          context.push(today == null ? '/mood/checkin' : '/mood/trends'),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          if (today != null)
+            Container(
+              width: 28,
+              height: 28,
+              decoration:
+                  BoxDecoration(color: today.color, shape: BoxShape.circle),
+            )
+          else
+            const Icon(Icons.palette_outlined,
+                color: AppColors.accent, size: 28),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              today == null
+                  ? 'How do you feel today, in one color?'
+                  : 'Today logged — see your color diary',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ),
+          const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+        ],
+      ),
+    );
   }
 }
 

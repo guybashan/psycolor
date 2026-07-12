@@ -7,6 +7,7 @@ class PersonalityProfile {
     required this.tagline,
     required this.sections,
     required this.primaryColor,
+    this.questions = const [],
   });
 
   final String id;
@@ -14,6 +15,9 @@ class PersonalityProfile {
   final String tagline;
   final List<ProfileSection> sections;
   final TestColorId primaryColor;
+
+  /// Reflective prompts handed to the reader at the end of the reading.
+  final List<String> questions;
 }
 
 class ProfileSection {

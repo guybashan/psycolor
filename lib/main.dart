@@ -11,6 +11,7 @@ Future<void> main() async {
   await Hive.openBox('credits');
   await Hive.openBox('history');
   await Hive.openBox('hue_history');
+  await Hive.openBox('mood_history');
   await CreditService(Hive.box('credits')).initialize();
 
   runApp(

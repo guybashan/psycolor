@@ -15,6 +15,10 @@ class TestScoringService {
 
     final sections = List<ProfileSection>.from(profile.sections);
 
+    // The gap between "how I feel" and "how I want to feel" is the
+    // centerpiece of the two-pass design — surface it prominently.
+    sections.add(nowVersusWant(pass1Order.first, pass2Order.first));
+
     for (final color in TestColorId.values) {
       final p1 = pass1Order.indexOf(color) + 1;
       final p2 = pass2Order.indexOf(color) + 1;
@@ -22,7 +26,7 @@ class TestScoringService {
       if (insight != null) {
         sections.add(
           ProfileSection(
-            title: '${color.name} Shift',
+            title: '${color.name} moved',
             body: insight,
           ),
         );
@@ -33,13 +37,34 @@ class TestScoringService {
     if (rejected == TestColorId.gray || rejected == TestColorId.black) {
       sections.add(
         ProfileSection(
-          title: 'Hidden Tension',
+          title: 'What you pushed away',
           body:
-              'Placing ${rejected.name} last suggests you may be distancing yourself from '
-              '${rejected.trait.toLowerCase()}. Notice if this protects or limits you.',
+              'You placed ${rejected.name} last. People often push a color to '
+              'the bottom when what it stands for — ${rejected.trait.toLowerCase()} — '
+              'feels unwanted or unsafe right now. Worth a look: is that '
+              'distance protecting you, or costing you?',
         ),
       );
     }
+
+    if (profile.questions.isNotEmpty) {
+      sections.add(
+        ProfileSection(
+          title: 'Questions to sit with',
+          body: profile.questions.map((q) => '•  $q').join('\n\n'),
+        ),
+      );
+    }
+
+    sections.add(
+      const ProfileSection(
+        title: 'About this reading',
+        body:
+            'This exercise follows the classic color-ranking tradition. It is '
+            'a mirror for self-reflection, not a measurement or diagnosis — '
+            'keep what rings true, leave what doesn\'t.',
+      ),
+    );
 
     final auraColors = pass1Order.take(3).toList();
 

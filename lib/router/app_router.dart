@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:psycolor/features/history/history_screen.dart';
 import 'package:psycolor/features/home/home_screen.dart';
 import 'package:psycolor/features/hue_test/hue_results_screen.dart';
+import 'package:psycolor/features/mood/mood_checkin_screen.dart';
+import 'package:psycolor/features/mood/mood_trends_screen.dart';
 import 'package:psycolor/features/hue_test/hue_test_intro_screen.dart';
 import 'package:psycolor/features/hue_test/hue_test_screen.dart';
 import 'package:psycolor/features/onboarding/welcome_screen.dart';
@@ -32,6 +34,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/home',
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: '/mood/checkin',
+        builder: (context, state) => const MoodCheckinScreen(),
+      ),
+      GoRoute(
+        path: '/mood/trends',
+        builder: (context, state) => const MoodTrendsScreen(),
       ),
       GoRoute(
         path: '/hue/intro',
