@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +8,7 @@ import 'package:psycolor/theme/app_colors.dart';
 import 'package:psycolor/widgets/color_tile.dart';
 import 'package:psycolor/widgets/gradient_background.dart';
 import 'package:psycolor/widgets/primary_button.dart';
+import 'package:psycolor/widgets/quick_drag_start_listener.dart';
 
 class ColorRankScreen extends ConsumerWidget {
   const ColorRankScreen({super.key});
@@ -49,26 +51,48 @@ class ColorRankScreen extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  'Tap ↑ ↓ to rank — most preferred at the top.',
+                  'Hold & drag to rank — most preferred at the top.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
               const SizedBox(height: 16),
               Expanded(
-                child: ListView.builder(
+                child: ReorderableListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
+                  buildDefaultDragHandles: false,
                   itemCount: session.currentOrder.length,
+                  onReorder: (oldIndex, newIndex) {
+                    HapticFeedback.mediumImpact();
+                    notifier.reorder(oldIndex, newIndex);
+                  },
+                  proxyDecorator: (child, index, animation) {
+                    return AnimatedBuilder(
+                      animation: animation,
+                      builder: (context, _) {
+                        final t = Curves.easeOut
+                            .transform(animation.value);
+                        return Transform.scale(
+                          scale: 1 + 0.04 * t,
+                          child: child,
+                        );
+                      },
+                      child: child,
+                    );
+                  },
                   itemBuilder: (context, index) {
                     final colorId = session.currentOrder[index];
-                    return ColorTile(
+                    return QuickDragStartListener(
                       key: ValueKey('${session.pass}_${colorId.storageKey}'),
-                      colorId: colorId,
-                      rank: index + 1,
-                      onReorderUp:
-                          index > 0 ? () => notifier.moveUp(index) : null,
-                      onReorderDown: index < session.currentOrder.length - 1
-                          ? () => notifier.moveDown(index)
-                          : null,
+                      index: index,
+                      child: ColorTile(
+                        colorId: colorId,
+                        rank: index + 1,
+                        onReorderUp:
+                            index > 0 ? () => notifier.moveUp(index) : null,
+                        onReorderDown: index < session.currentOrder.length - 1
+                            ? () => notifier.moveDown(index)
+                            : null,
+                      ),
                     );
                   },
                 ),
