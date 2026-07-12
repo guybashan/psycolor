@@ -2,6 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:psycolor/features/history/history_screen.dart';
 import 'package:psycolor/features/home/home_screen.dart';
+import 'package:psycolor/features/hue_test/hue_results_screen.dart';
+import 'package:psycolor/features/hue_test/hue_test_intro_screen.dart';
+import 'package:psycolor/features/hue_test/hue_test_screen.dart';
 import 'package:psycolor/features/onboarding/welcome_screen.dart';
 import 'package:psycolor/features/results/results_screen.dart';
 import 'package:psycolor/features/splash/splash_screen.dart';
@@ -29,6 +32,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/home',
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: '/hue/intro',
+        builder: (context, state) => const HueTestIntroScreen(),
+      ),
+      GoRoute(
+        path: '/hue/test',
+        builder: (context, state) => const HueTestScreen(),
+      ),
+      GoRoute(
+        path: '/hue/results',
+        builder: (context, state) => const HueResultsScreen(),
       ),
       GoRoute(
         path: '/test/intro',

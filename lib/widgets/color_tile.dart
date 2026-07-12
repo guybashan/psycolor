@@ -60,28 +60,18 @@ class ColorTile extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 14),
+              // Only the color name — trait meanings are revealed in the
+              // results, so they can't bias the ranking itself.
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      colorId.name,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: labelColor,
-                            fontWeight: FontWeight.w600,
-                          ),
-                    ),
-                    Text(
-                      colorId.trait,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: labelColor.withValues(alpha: 0.85),
-                            fontSize: 12,
-                          ),
-                    ),
-                  ],
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    colorId.name,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: labelColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
                 ),
               ),
               _ReorderButton(
@@ -98,7 +88,7 @@ class ColorTile extends StatelessWidget {
           ),
         ),
       )
-          .animate(key: ValueKey('${colorId.storageKey}_$rank'))
+          .animate(key: ValueKey(colorId.storageKey))
           .fadeIn(duration: 180.ms, curve: Curves.easeOut)
           .slideY(begin: 0.04, end: 0, duration: 180.ms, curve: Curves.easeOut),
     );

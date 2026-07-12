@@ -41,12 +41,19 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 32),
                 _HeroTestCard(
-                  onTap: () => _startTest(context, ref, balance),
+                  onTap: () => context.push('/hue/intro'),
                 )
                     .animate()
                     .fadeIn(duration: 500.ms)
                     .slideY(begin: 0.1, end: 0),
-                const SizedBox(height: 28),
+                const SizedBox(height: 12),
+                _ClassicTestCard(
+                  onTap: () => _startTest(context, ref, balance),
+                )
+                    .animate()
+                    .fadeIn(duration: 500.ms, delay: 120.ms)
+                    .slideY(begin: 0.1, end: 0),
+                const SizedBox(height: 24),
                 Text(
                   'Recent results',
                   style: Theme.of(context).textTheme.titleLarge,
@@ -214,7 +221,7 @@ class _HeroTestCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Take the test',
+              'Color vision test',
               style: Theme.of(context).textTheme.displayMedium?.copyWith(
                     fontSize: 26,
                     color: Colors.white,
@@ -222,7 +229,8 @@ class _HeroTestCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Rank 8 colors in two passes and reveal your personality profile.',
+              'Arrange 20 shades by hue and measure how finely you '
+              'discriminate color.',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: Colors.white.withValues(alpha: 0.92),
                   ),
@@ -238,7 +246,7 @@ class _HeroTestCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    '1 credit',
+                    'Free',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -268,6 +276,44 @@ class _HeroTestCard extends StatelessWidget {
           ),
           duration: 2.seconds,
         );
+  }
+}
+
+class _ClassicTestCard extends StatelessWidget {
+  const _ClassicTestCard({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassCard(
+      onTap: onTap,
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          const Icon(Icons.psychology_outlined,
+              color: AppColors.accent, size: 28),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Classic color reflection',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                Text(
+                  'The traditional two-pass ranking — for self-reflection, '
+                  'not measurement. 1 credit.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+          ),
+          const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+        ],
+      ),
+    );
   }
 }
 
