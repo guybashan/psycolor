@@ -1,10 +1,13 @@
 import 'package:psycolor/data/personality_profiles.dart';
 import 'package:psycolor/models/test_result.dart';
+import 'package:psycolor/services/luscher_reading_service.dart';
 import 'package:psycolor/theme/app_colors.dart';
 import 'package:uuid/uuid.dart';
 
 class TestScoringService {
   const TestScoringService();
+
+  static const _luscher = LuscherReadingService();
 
   TestResult score({
     required List<TestColorId> pass1Order,
@@ -13,7 +16,12 @@ class TestScoringService {
     final primaryColor = pass1Order.first;
     final profile = profileForTopColor(primaryColor);
 
-    final sections = List<ProfileSection>.from(profile.sections);
+    // The authentic Lüscher reading: interpret pass 1 (how you feel now) by
+    // functional position-pairs — goal, present, reserve, rejection, and the
+    // compensation tension between top and bottom.
+    final sections = <ProfileSection>[
+      ..._luscher.readingFor(pass1Order),
+    ];
 
     // The gap between "how I feel" and "how I want to feel" is the
     // centerpiece of the two-pass design — surface it prominently.
@@ -33,20 +41,6 @@ class TestScoringService {
       }
     }
 
-    final rejected = pass1Order.last;
-    if (rejected == TestColorId.gray || rejected == TestColorId.black) {
-      sections.add(
-        ProfileSection(
-          title: 'What you pushed away',
-          body:
-              'You placed ${rejected.name} last. People often push a color to '
-              'the bottom when what it stands for — ${rejected.trait.toLowerCase()} — '
-              'feels unwanted or unsafe right now. Worth a look: is that '
-              'distance protecting you, or costing you?',
-        ),
-      );
-    }
-
     if (profile.questions.isNotEmpty) {
       sections.add(
         ProfileSection(
@@ -60,9 +54,10 @@ class TestScoringService {
       const ProfileSection(
         title: 'About this reading',
         body:
-            'This exercise follows the classic color-ranking tradition. It is '
-            'a mirror for self-reflection, not a measurement or diagnosis — '
-            'keep what rings true, leave what doesn\'t.',
+            'This follows the classic Lüscher color method: your ranking is '
+            'read by the position each color lands in, not by taste alone. '
+            'It is a mirror for reflection, not a clinical measurement — keep '
+            'what rings true, leave what doesn\'t.',
       ),
     );
 
@@ -74,8 +69,8 @@ class TestScoringService {
       pass1Order: pass1Order,
       pass2Order: pass2Order,
       profileId: profile.id,
-      archetype: profile.archetype,
-      tagline: profile.tagline,
+      archetype: _luscher.archetypeFor(pass1Order),
+      tagline: _luscher.taglineFor(pass1Order),
       sections: sections,
       auraColors: auraColors,
     );
